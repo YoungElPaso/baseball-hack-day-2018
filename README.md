@@ -7,6 +7,6 @@ Allows a user to pick a starting point, a start date and an end date for a roadt
 
 ![Roadtrip on map](./public/Screenshot-2018-3-17%20React%20App.png)
 
-Live prototype here: https://friendly-goldwasser-7621f9.netlify.com/
+Live prototype (React App) here: https://friendly-goldwasser-7621f9.netlify.com/
 
 Created by: <insert participants here ;) >
