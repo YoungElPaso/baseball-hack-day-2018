@@ -47,7 +47,7 @@ class NewRoute extends Component {
       endDate: "2018-05-24"
     };
 
-    console.log('very first state', this.state);
+    console.log("very first state", this.state);
   }
 
   // Method for getting a new route...
@@ -78,7 +78,7 @@ class NewRoute extends Component {
     // Get Initial route data using some mock data.
     // let routeData = getGames.buildRoute(...mockData);
     // console.log(this, mockData);
-    console.info('new stuff', changedStuff )
+    console.info("new stuff", changedStuff);
     this.getNewRoute(changedStuff);
   }
 
@@ -92,11 +92,7 @@ class NewRoute extends Component {
     //   "2018-05-24"
     // ];
 
-    let mockData = [
-      this.state.team,
-      this.state.startDate,
-      this.state.endDate
-    ];
+    let mockData = [this.state.team, this.state.startDate, this.state.endDate];
 
     // Get Initial route data using some mock data.
     // let routeData = getGames.buildRoute(...mockData);
@@ -132,6 +128,12 @@ class NewRoute extends Component {
     // Handlers for date changing.
     let handleDateChange = this.handleDateChange;
 
+    let place = this.state.place || null;
+
+    // let directions = this.state.directions || [];
+
+    // console.log(directions);
+
     return (
       <div>
         <InputForm
@@ -150,6 +152,7 @@ class NewRoute extends Component {
           waypoints={waypoints}
           origin={origin}
           destination={destination}
+          place={place}
         />
         <Schedule sD={startDate} eD={endDate} schedule={schedule} />
       </div>
