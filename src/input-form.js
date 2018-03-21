@@ -14,20 +14,58 @@ class InputForm extends Component {
     // Need to set a default end date...
     // this.state.endDate = "";
     this.handleDateChange = this.handleDateChange.bind(this);
+    console.info("form props", this.props);
+    this.state = this.props;
   }
 
   handleDateChange(e) {
-    this.props.changeDate(e.target.value);
+    if (e.target.name == "sd") {
+      // change start date..
+      console.log(e.target.value);
+      this.setState({ sD: e.target.value });
+    }
+    if (e.target.name == "ed") {
+      // change end date..
+      // this.setState({ endDate: e.target.value });
+      console.log(e.target.value);
+      this.setState({ eD: e.target.value });
+    }
+    if (e.target.name == "team-selector") {
+      // change team selected
+      // console.log(e.target.value);
+      this.setState({ team: e.target.value });
+    }
+    // TODO: almost there! JUst need change up the format of these dates!
+    if (e.target.name == "button") {
+      let setting = [
+        // "93941372-eb4c-4c40-aced-fe3267174393",
+        this.state.sD,
+        this.state.eD
+      ];
+      this.props.changeDate(setting);
+      // console.log(this.state);
+    }
   }
 
   render() {
-    let sD = this.props.sD;
-    let eD = this.props.eD;
+    // let sD = this.props.sD;
+    // let eD = this.props.eD;
+    // let team = this.props.team;
     let handle = this.handleDateChange;
+
     return (
       <div>
-        {sD} - {eD}
-        <button onClick={handle}>Update Route</button>
+        <select name="team-selector" value={this.state.team} onChange={handle}>
+          {Object.keys(teams).map(team => {
+            // console.log(teams[team], team);
+            return <option value={teams[team]}>{team}</option>;
+          })}
+        </select>
+        <input type="text" name="sd" value={this.state.sD} onChange={handle} />
+        <input type="text" name="ed" value={this.state.eD} onChange={handle} />
+        <button onClick={handle} name="button">
+          Update Route
+        </button>
       </div>
     );
   }
