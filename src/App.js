@@ -37,7 +37,7 @@ class NewRoute extends Component {
 
     // Init state with some defaults.
     this.state = {
-      team: Object.keys(teams)[0],
+      team: teams[Object.keys(teams)[0]],
       zoom: 7,
       // startDate: moment().format("YYYY-MM-DD"),
       // endDate: moment()
@@ -46,6 +46,8 @@ class NewRoute extends Component {
       startDate: "2018-05-12",
       endDate: "2018-05-24"
     };
+
+    console.log('very first state', this.state);
   }
 
   // Method for getting a new route...
@@ -56,25 +58,32 @@ class NewRoute extends Component {
   }
 
   // Method for handling date change...
-  handleDateChange(e, date) {
+  handleDateChange(changedStuff) {
     console.log("changing date");
     // this.setState....
 
     // Some mock data for a roadtrip in May.
-    let mockData = [
-      "93941372-eb4c-4c40-aced-fe3267174393",
-      "2018-07-12",
-      "2018-07-24"
-    ];
+    // let mockData = [
+    //   "93941372-eb4c-4c40-aced-fe3267174393",
+    //   "2018-07-12",
+    //   "2018-07-24"
+    // ];
+
+    // let mockData = [
+    //   this.state.team,
+    //   this.state.startDate,
+    //   this.state.endDate
+    // ];
 
     // Get Initial route data using some mock data.
     // let routeData = getGames.buildRoute(...mockData);
     // console.log(this, mockData);
-    this.getNewRoute(mockData);
+    console.info('new stuff', changedStuff )
+    this.getNewRoute(changedStuff);
   }
 
   componentDidMount() {
-    console.log("NewRoute props", this.state);
+    console.info("NewRoute props", this.state);
 
     // Some mock data for a roadtrip in May.
     // let mockData = [
@@ -84,7 +93,7 @@ class NewRoute extends Component {
     // ];
 
     let mockData = [
-      "55714da8-fcaf-4574-8443-59bfb511a524",
+      this.state.team,
       this.state.startDate,
       this.state.endDate
     ];
@@ -126,8 +135,8 @@ class NewRoute extends Component {
     return (
       <div>
         <InputForm
-          sD={startDate}
-          eD={endDate}
+          startDate={startDate}
+          endDate={endDate}
           changeDate={handleDateChange}
           team={team}
         />

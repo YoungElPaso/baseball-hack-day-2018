@@ -22,13 +22,13 @@ class InputForm extends Component {
     if (e.target.name == "sd") {
       // change start date..
       console.log(e.target.value);
-      this.setState({ sD: e.target.value });
+      this.setState({ startDate: e.target.value });
     }
     if (e.target.name == "ed") {
       // change end date..
       // this.setState({ endDate: e.target.value });
       console.log(e.target.value);
-      this.setState({ eD: e.target.value });
+      this.setState({ endDate: e.target.value });
     }
     if (e.target.name == "team-selector") {
       // change team selected
@@ -39,11 +39,13 @@ class InputForm extends Component {
     if (e.target.name == "button") {
       let setting = [
         // "93941372-eb4c-4c40-aced-fe3267174393",
-        this.state.sD,
-        this.state.eD
+        this.state.team,
+        this.state.startDate,
+        this.state.endDate
       ];
+
+      console.info(this.state, setting);
       this.props.changeDate(setting);
-      // console.log(this.state);
     }
   }
 
@@ -61,8 +63,8 @@ class InputForm extends Component {
             return <option value={teams[team]}>{team}</option>;
           })}
         </select>
-        <input type="text" name="sd" value={this.state.sD} onChange={handle} />
-        <input type="text" name="ed" value={this.state.eD} onChange={handle} />
+        <input type="text" name="sd" value={this.state.startDate} onChange={handle} />
+        <input type="text" name="ed" value={this.state.endDate} onChange={handle} />
         <button onClick={handle} name="button">
           Update Route
         </button>
