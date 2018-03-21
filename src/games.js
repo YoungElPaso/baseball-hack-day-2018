@@ -6,7 +6,7 @@ const distances = require("./data/distances");
 
 export default class Games {
   gamesBetweenDates = (start, end) => {
-    return _(games)
+    let goodGames = _(games)
       .filter(game => {
         const gameTime = moment.utc(game.scheduled);
         const startDate = moment.utc(start);
@@ -17,6 +17,7 @@ export default class Games {
           gameTime.isSameOrBefore(endDate, "day")
         );
       })
+      .orderBy(game => game.scheduled)
       .map(game => {
         const dd = _(distances[game.home_team])
           .sortBy(k => k[1])
@@ -25,6 +26,8 @@ export default class Games {
 
         return _.assignIn(game, { distances: dd });
       });
+    console.log(goodGames.value());
+    return goodGames;
   };
 
   firstGameAtBetween(teamId, start, end) {
@@ -39,7 +42,7 @@ export default class Games {
     const endOn = moment.utc(end);
     let current = moment.utc(start);
     let currentGame = this.firstGameAtBetween(teamId, start, end);
-    let maxTravel = 500;
+    let maxTravel = 300;
     results.push(currentGame);
 
     const route = {
@@ -58,8 +61,18 @@ export default class Games {
       }`
     );
 
+    // Key fix, current should be updated to whatever the first game is.
+    // I.e. if you start w/ a home game in the city you choose, should go from there.
+
+    // TODO: also first game is listed as a way point or always "B" in the markers.
+
+    // TODO: reducing travel distance from 500 to 300/200 is better
+    // TODO: avoiding repetition in cities would be ideal.
+    current = moment(currentGame.scheduled);
+
     while (current.isBefore(endOn, "day")) {
       current.add(1, "day");
+      console.log(current);
       let nextDaysGames = this.gamesBetweenDates(current, current);
 
       let nextDestination = _(nextDaysGames)
