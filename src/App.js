@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
+import moment from "moment";
+
 // Import the games scheduling class.
 import Games from "./games.js";
 
@@ -12,6 +14,7 @@ import MyMapComponent from "./map.js";
 import MapWithADirectionsRenderer from "./map-direction.js";
 import InputForm from "./input-form.js";
 
+const teams = AllTeams;
 // Bring in the react-google-maps components.
 const {
   withScriptjs,
@@ -34,9 +37,14 @@ class NewRoute extends Component {
 
     // Init state with some defaults.
     this.state = {
+      team: Object.keys(teams)[0],
       zoom: 7,
-      startDate: null,
-      endDate: null
+      // startDate: moment().format("YYYY-MM-DD"),
+      // endDate: moment()
+      //   .add(1, "days")
+      //   .format("YYYY-MM-DD")
+      startDate: "2018-05-12",
+      endDate: "2018-05-24"
     };
   }
 
@@ -69,10 +77,16 @@ class NewRoute extends Component {
     console.log("NewRoute props", this.state);
 
     // Some mock data for a roadtrip in May.
+    // let mockData = [
+    //   "55714da8-fcaf-4574-8443-59bfb511a524",
+    //   "2018-05-12",
+    //   "2018-05-24"
+    // ];
+
     let mockData = [
       "55714da8-fcaf-4574-8443-59bfb511a524",
-      "2018-05-12",
-      "2018-05-24"
+      this.state.startDate,
+      this.state.endDate
     ];
 
     // Get Initial route data using some mock data.
@@ -101,6 +115,8 @@ class NewRoute extends Component {
     let startDate = this.state.startDate || null;
     let endDate = this.state.endDate || null;
 
+    let team = this.state.team || null;
+
     // Zoom is easy to set.
     let zoom = this.state.zoom;
 
@@ -109,7 +125,12 @@ class NewRoute extends Component {
 
     return (
       <div>
-        <InputForm sD={startDate} eD={endDate} changeDate={handleDateChange} />
+        <InputForm
+          sD={startDate}
+          eD={endDate}
+          changeDate={handleDateChange}
+          team={team}
+        />
         <MapWithADirectionsRenderer
           isMarkerShown
           googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUmfYzdwc8GFbdBKWMVy0Oqqeh0zN3J6E&?v=3.exp&libraries=geometry,drawing,places"
