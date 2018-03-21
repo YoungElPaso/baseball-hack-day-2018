@@ -5,6 +5,7 @@ const {
   withScriptjs,
   withGoogleMap,
   GoogleMap,
+  Marker,
   DirectionsRenderer
 } = require("react-google-maps");
 
@@ -20,11 +21,53 @@ const MapWithADirectionsRenderer = compose(
   lifecycle({
     componentWillUpdate() {
       const DirectionsService = new google.maps.DirectionsService();
+      const GeoCodeService = new google.maps.Geocoder();
+
+      GeoCodeService.geocode(
+        {
+          address: this.props.origin
+        },
+        (result, status) => {
+          if (status === google.maps.GeocoderStatus.OK) {
+            this.setState(
+              {
+                place: {
+                  lat: result[0].geometry.location.lat(),
+                  lng: result[0].geometry.location.lng()
+                }
+                // place: { lat: 42.397, lng: -89.644 }
+              },
+              function() {
+                console.log("place", result[0].geometry.location);
+              }
+            );
+          } else {
+            console.error(`error fetching location ${result}`);
+          }
+        }
+      );
 
       console.log("new map props", this.props);
 
+      let splitOrigin =
+        this.props.waypoints > 1
+          ? this.props.waypoints[0].location
+          : this.props.origin;
+      let splitDestination =
+        this.props.waypoints > 1
+          ? this.props.waypoints.pop().location
+          : this.props.destination;
+      let splitWaypoints = this.props.waypoints.slice(
+        1,
+        this.props.waypoints.length - 1
+      );
+      console.log(splitOrigin);
       DirectionsService.route(
         {
+          // Problem: destination should be last waypoint probably...yet, need a destination first to copmute....
+          // origin: splitOrigin,
+          // destination: splitDestination,
+          // waypoints: splitWaypoints,
           origin: this.props.origin,
           destination: this.props.destination,
           waypoints: this.props.waypoints,
@@ -49,11 +92,54 @@ const MapWithADirectionsRenderer = compose(
     },
     componentDidMount() {
       const DirectionsService = new google.maps.DirectionsService();
+      const GeoCodeService = new google.maps.Geocoder();
+
+      GeoCodeService.geocode(
+        {
+          address: this.props.origin
+        },
+        (result, status) => {
+          if (status === google.maps.GeocoderStatus.OK) {
+            this.setState(
+              {
+                // place: result[0].geometry.location
+                // place: { lat: 42.397, lng: -89.644 }
+                place: {
+                  lat: result[0].geometry.location.lat(),
+                  lng: result[0].geometry.location.lng()
+                }
+              },
+              function() {
+                console.log("place", result[0].location);
+              }
+            );
+          } else {
+            console.error(`error fetching location ${result}`);
+          }
+        }
+      );
 
       console.log("map props", this.props);
 
+      let splitOrigin =
+        this.props.waypoints > 1
+          ? this.props.waypoints[0].location
+          : this.props.origin;
+      let splitDestination =
+        this.props.waypoints > 1
+          ? this.props.waypoints.pop().location
+          : this.props.destination;
+
+      let splitWaypoints = this.props.waypoints.slice(
+        1,
+        this.props.waypoints.length - 1
+      );
+
       DirectionsService.route(
         {
+          // origin: splitOrigin,
+          // destination: splitDestination,
+          // waypoints: splitWaypoints,
           origin: this.props.origin,
           destination: this.props.destination,
           waypoints: this.props.waypoints,
@@ -80,9 +166,17 @@ const MapWithADirectionsRenderer = compose(
 )(props => (
   <GoogleMap
     defaultZoom={props.zoom || 8}
-    defaultCenter={props.center || { lat: -34.397, lng: 150.644 }}
+    defaultCenter={props.place || { lat: 42.397, lng: -89.644 }}
+    center={props.place}
   >
-    {props.directions && <DirectionsRenderer directions={props.directions} />}
+    {props.directions &&
+      props.waypoints.length > 1 && (
+        <DirectionsRenderer directions={props.directions} />
+      )}
+
+    {props.waypoints.length <= 1 && (
+      <Marker position={props.place} title={props.origin} />
+    )}
   </GoogleMap>
 ));
 
